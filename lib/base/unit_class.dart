@@ -1,0 +1,3 @@
+class Unit {}
+
+class None {}

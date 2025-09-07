@@ -1,0 +1,248 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:dart_either/dart_either.dart';
+import 'package:flutter_core/base/typedef.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:logger/logger.dart';
+import 'package:http/http.dart' as http;
+
+import 'api_client.dart';
+
+abstract class BaseRepository<R> {
+  final AppAPIClient _apiClient;
+  final AppGQLClient _gqlClient;
+  final Logger _logger;
+
+  Future<Either<Exception, T>> executeGET<T>({
+    required String endpoint,
+    required T Function(String) transformer,
+    void Function(Exception)? onError,
+  }) async {
+    try {
+      var response = await _apiClient.get(endpoint);
+      return Right(transformer(response));
+    } on Exception catch (e) {
+      if (onError != null) {
+        onError(e);
+      }
+      _logger.e('error with GET request: $e \n endpoint: $endpoint');
+      return Left(e);
+    } catch (error) {
+      _logger.e('error with GET request: $error \n endpoint: $endpoint');
+      return Left(Exception(error));
+    }
+  }
+
+  Future<Either<Exception, T>> executePOST<T>({
+    required String endpoint,
+    Map<String, dynamic>? body,
+    required T Function(http.Response) transformer,
+    void Function(Exception)? onError,
+  }) async {
+    try {
+      var response = await _apiClient.post(endpoint, body);
+      return Right(transformer(response));
+    } on Exception catch (e) {
+      if (onError != null) {
+        onError(e);
+      }
+      _logger.e('error with POST request: $e \n endpoint: $endpoint');
+      return Left(e);
+    } catch (error) {
+      _logger.e('error with POST request: $error \n endpoint: $endpoint');
+      return Left(Exception(error));
+    }
+  }
+
+  Future<Either<Exception, T>> executePOSTObject<T>({
+    required String endpoint,
+    Object? body,
+    required T Function(http.Response) transformer,
+    void Function(Exception)? onError,
+  }) async {
+    try {
+      var response = await _apiClient.postObject(body, endpoint);
+      return Right(transformer(response));
+    } on Exception catch (e) {
+      if (onError != null) {
+        onError(e);
+      }
+      _logger.e('error with POST Object request: $e \n endpoint: $endpoint');
+      return Left(e);
+    } catch (error) {
+      _logger.e(
+        'error with POST Object request: $error \n endpoint: $endpoint',
+      );
+      return Left(Exception(error));
+    }
+  }
+
+  Future<Either<Exception, T>> executePUT<T>({
+    required String endpoint,
+    String? contentType,
+    String? body,
+    bool forceRefresh = false,
+    required T Function(http.Response) transformer,
+    void Function(Exception)? onError,
+  }) async {
+    try {
+      var response = await _apiClient.put(
+        endpoint: endpoint,
+        contentType: contentType,
+        body: body,
+        forceRefresh: forceRefresh,
+      );
+      return Right(transformer(response));
+    } on Exception catch (e) {
+      if (onError != null) {
+        onError(e);
+      }
+      _logger.e('error with PUT request: $e \n endpoint: $endpoint');
+      return Left(e);
+    } catch (error) {
+      _logger.e('error with PUT request: $error \n endpoint: $endpoint');
+      return Left(Exception(error));
+    }
+  }
+
+  Future<Either<Exception, T>> executePutMap<T>({
+    required String endpoint,
+    Map<String, dynamic>? body,
+    required T Function(http.Response) transformer,
+    void Function(Exception)? onError,
+  }) async {
+    try {
+      var response = await _apiClient.putMap(endpoint, body);
+      return Right(transformer(response));
+    } on Exception catch (e) {
+      if (onError != null) {
+        onError(e);
+      }
+      _logger.e('error with PUT request: $e \n endpoint: $endpoint');
+      return Left(e);
+    } catch (error) {
+      _logger.e('error with PUT request: $error \n endpoint: $endpoint');
+      return Left(Exception(error));
+    }
+  }
+
+  Future<Either<Exception, T>> executeQuery<T>({
+    required QueryOptions<Query> query,
+    required T Function(Map<String, dynamic>) transformer,
+    void Function(Exception)? onError,
+  }) async {
+    try {
+      var response = await _gqlClient.query(query);
+      return Right(transformer(response));
+    } on Exception catch (e) {
+      if (onError != null) {
+        onError(e);
+      }
+      _logger.e('error with GQL query: $e \n query: ${query.asRequest}');
+      return Left(e);
+    }
+  }
+
+  Future<Either<Exception, T>> executeMutation<T>({
+    required MutationOptions<Mutation> mutation,
+    required T Function(Map<String, dynamic>?) transformer,
+    void Function(Exception)? onError,
+  }) async {
+    try {
+      var response = await _gqlClient.mutation(mutation);
+      return Right(transformer(response));
+    } on Exception catch (e) {
+      if (onError != null) {
+        onError(e);
+      }
+      _logger.e(
+        'error with GQL mutation: $e \n mutation: ${mutation.asRequest}',
+      );
+      return Left(e);
+    }
+  }
+
+  Future<Either<Exception, T>> executeMultipartUpload<T>({
+    required File fileToUpload,
+    required String endpoint,
+    required T Function(String) transformer,
+    OnUploadProgressCallback? uploadCallback,
+    String? fileMediaType,
+    String fileFieldName = 'file',
+    void Function(Exception)? onError,
+  }) async {
+    try {
+      final response = await _apiClient.multiPartRequest(
+        fileToUpload: fileToUpload,
+        fileMediaType: fileMediaType,
+        endpoint: endpoint,
+        uploadCallback: uploadCallback,
+        fileFieldName: fileFieldName,
+      );
+      return Right(transformer(response));
+    } on Exception catch (e) {
+      if (onError != null) {
+        onError(e);
+      }
+      _logger.e('error with Multipart POST request: $e \n endpoint: $endpoint');
+      return Left(e);
+    }
+  }
+
+  Future<Either<Exception, T>> executeDelete<T>({
+    required String endpoint,
+    required T Function(http.Response) transformer,
+    void Function(Exception)? onError,
+  }) async {
+    try {
+      var response = await _apiClient.delete(endpoint);
+      return Right(transformer(response));
+    } on Exception catch (e) {
+      if (onError != null) {
+        onError(e);
+      }
+      _logger.e('error with DELETE request: $e \n endpoint: $endpoint');
+      return Left(e);
+    } catch (error) {
+      _logger.e('error with DELETE request: $error \n endpoint: $endpoint');
+      return Left(Exception(error));
+    }
+  }
+
+  Future<Either<Exception, T>> executeFileDownLoad<T>({
+    required String endpoint,
+    required T Function(Uint8List) transformer,
+    void Function(Exception)? onError,
+  }) async {
+    try {
+      var response = await _apiClient.downloadFile(endpoint);
+      return Right(transformer(response));
+    } on Exception catch (e) {
+      if (onError != null) {
+        onError(e);
+      }
+      _logger.e(
+        'error with GET File download request: $e \n endpoint: $endpoint',
+      );
+      return Left(e);
+    } catch (error) {
+      _logger.e(
+        'error with GET File download request: $error \n endpoint: $endpoint',
+      );
+      return Left(Exception(error));
+    }
+  }
+
+  // helper method to verify POST/PUTs that require no transformation
+
+  bool isValidHTTP(int code) => code >= 200 && code < 300;
+
+  BaseRepository({
+    required AppAPIClient apiClient,
+    required AppGQLClient gqlClient,
+  }) : _logger = Logger(),
+       _gqlClient = gqlClient,
+       _apiClient = apiClient,
+       super();
+}

@@ -1,0 +1,1 @@
+typedef OnUploadProgressCallback = void Function(int, int);

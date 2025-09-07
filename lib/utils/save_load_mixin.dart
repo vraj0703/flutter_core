@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_core/base/throttler.dart';
 
 import 'json_prefs_file.dart';
 

@@ -17,6 +17,7 @@ dependencies:
   internet_connection_checker: ^3.0.1
   dart_either: ^2.0.0
   shared_preferences: ^2.5.3
+  graphql_flutter: ^5.2.1
 
 dev_dependencies:
   flutter_test:

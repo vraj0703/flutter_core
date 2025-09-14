@@ -2,16 +2,16 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dart_either/dart_either.dart';
-import 'package:flutter_core/base/typedef.dart';
+import 'package:flutter_core/domain/typedef/typedef.dart';
+import 'package:flutter_core/domain/network/gql_client.dart';
+import 'package:flutter_core/domain/network/rest_api_client.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
 
-import 'api_client.dart';
-
 abstract class BaseRepository<R> {
-  final AppAPIClient _apiClient;
-  final AppGQLClient _gqlClient;
+  final RestApiClient _apiClient;
+  final GQLClient _gqlClient;
   final Logger _logger;
 
   Future<Either<Exception, T>> executeGET<T>({
@@ -235,12 +235,11 @@ abstract class BaseRepository<R> {
   }
 
   // helper method to verify POST/PUTs that require no transformation
-
   bool isValidHTTP(int code) => code >= 200 && code < 300;
 
   BaseRepository({
-    required AppAPIClient apiClient,
-    required AppGQLClient gqlClient,
+    required RestApiClient apiClient,
+    required GQLClient gqlClient,
   }) : _logger = Logger(),
        _gqlClient = gqlClient,
        _apiClient = apiClient,

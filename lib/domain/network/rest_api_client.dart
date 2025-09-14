@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
-
-import 'package:flutter_core/base/typedef.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:flutter_core/domain/typedef/typedef.dart';
 import 'package:http/http.dart' as http;
 
-abstract class AppAPIClient {
+abstract class RestApiClient {
   Future<String> get(String endpoint);
 
   Future<http.Response> post(String endpoint, Map<String, dynamic>? body);
@@ -32,10 +30,4 @@ abstract class AppAPIClient {
   Future<http.Response> delete(String endpoint);
 
   Future<Uint8List> downloadFile(String endpoint);
-}
-
-abstract class AppGQLClient {
-  Future<Map<String, dynamic>> query(QueryOptions<Query> query);
-
-  Future<Map<String, dynamic>?> mutation(MutationOptions<Mutation> mutation);
 }

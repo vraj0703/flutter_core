@@ -1,5 +1,7 @@
-/// This class is used to help simplify in-memory caching. Rather than roll a custom/manual implementation every time
-/// we can simply extend this class. Using generics, you can define ID (your key type) and T (your value Type)
+/// This class is used to help simplify in-memory caching.
+/// Rather than roll a custom/manual implementation every time
+/// we can simply extend this class.
+/// Using generics, you can define ID (your key type) and T (your value Type)
 abstract class BaseCache<T, ID> {
   final Map<ID, T> _inMemoryCache = {};
 

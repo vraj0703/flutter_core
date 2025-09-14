@@ -1,16 +1,7 @@
 import 'package:dart_either/dart_either.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-
-abstract class ILocalJsonRepository {
-  Future<Either<Exception, String>> jsonStringFromLocal(String path);
-
-  Future<Either<Exception, T>> executeGET<T>({
-    required String jsonPath,
-    required T Function(String) transformer,
-    void Function(Exception)? onError,
-  });
-}
+import 'package:flutter_core/domain/repository/json_repository.dart';
 
 class LocalJsonRepository extends ILocalJsonRepository {
   LocalJsonRepository();

@@ -3,7 +3,7 @@ import 'dart:developer' as dev;
 import 'package:http/http.dart' as http;
 
 import 'rest_utils.dart';
-import 'string_utils.dart';
+import '../extensions/string_utils.dart';
 
 enum NetErrorType { none, disconnected, timedOut, denied }
 

@@ -14,7 +14,7 @@ abstract class BaseRepository<R> {
   final GQLClient _gqlClient;
   final Logger _logger;
 
-  Future<Either<Exception, T>> executeGET<T>({
+  Future<Either<Exception, T>> get<T>({
     required String endpoint,
     required T Function(String) transformer,
     void Function(Exception)? onError,
@@ -34,7 +34,7 @@ abstract class BaseRepository<R> {
     }
   }
 
-  Future<Either<Exception, T>> executePOST<T>({
+  Future<Either<Exception, T>> post<T>({
     required String endpoint,
     Map<String, dynamic>? body,
     required T Function(http.Response) transformer,
@@ -55,7 +55,7 @@ abstract class BaseRepository<R> {
     }
   }
 
-  Future<Either<Exception, T>> executePOSTObject<T>({
+  Future<Either<Exception, T>> postWithBody<T>({
     required String endpoint,
     Object? body,
     required T Function(http.Response) transformer,
@@ -78,7 +78,7 @@ abstract class BaseRepository<R> {
     }
   }
 
-  Future<Either<Exception, T>> executePUT<T>({
+  Future<Either<Exception, T>> put<T>({
     required String endpoint,
     String? contentType,
     String? body,
@@ -106,7 +106,7 @@ abstract class BaseRepository<R> {
     }
   }
 
-  Future<Either<Exception, T>> executePutMap<T>({
+  Future<Either<Exception, T>> putMap<T>({
     required String endpoint,
     Map<String, dynamic>? body,
     required T Function(http.Response) transformer,
@@ -127,7 +127,7 @@ abstract class BaseRepository<R> {
     }
   }
 
-  Future<Either<Exception, T>> executeQuery<T>({
+  Future<Either<Exception, T>> query<T>({
     required QueryOptions<Query> query,
     required T Function(Map<String, dynamic>) transformer,
     void Function(Exception)? onError,
@@ -144,7 +144,7 @@ abstract class BaseRepository<R> {
     }
   }
 
-  Future<Either<Exception, T>> executeMutation<T>({
+  Future<Either<Exception, T>> mutation<T>({
     required MutationOptions<Mutation> mutation,
     required T Function(Map<String, dynamic>?) transformer,
     void Function(Exception)? onError,
@@ -163,7 +163,7 @@ abstract class BaseRepository<R> {
     }
   }
 
-  Future<Either<Exception, T>> executeMultipartUpload<T>({
+  Future<Either<Exception, T>> multipartUpload<T>({
     required File fileToUpload,
     required String endpoint,
     required T Function(String) transformer,
@@ -190,7 +190,7 @@ abstract class BaseRepository<R> {
     }
   }
 
-  Future<Either<Exception, T>> executeDelete<T>({
+  Future<Either<Exception, T>> delete<T>({
     required String endpoint,
     required T Function(http.Response) transformer,
     void Function(Exception)? onError,
@@ -210,7 +210,7 @@ abstract class BaseRepository<R> {
     }
   }
 
-  Future<Either<Exception, T>> executeFileDownLoad<T>({
+  Future<Either<Exception, T>> downloadFile<T>({
     required String endpoint,
     required T Function(Uint8List) transformer,
     void Function(Exception)? onError,

@@ -38,6 +38,7 @@ dev_dependencies:
   injectable_generator: ^2.1.1
   freezed: ^3.2.3
   build_runner: ^2.3.3
+  mockito: ^5.5.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

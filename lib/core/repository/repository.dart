@@ -2,9 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dart_either/dart_either.dart';
-import 'package:flutter_core/domain/typedef/typedef.dart';
-import 'package:flutter_core/domain/network/gql_client.dart';
-import 'package:flutter_core/domain/network/rest_api_client.dart';
+import 'package:flutter_core/core/network/gql_client.dart';
+import 'package:flutter_core/core/network/rest_api_client.dart';
+import 'package:flutter_core/core/typedef/typedef.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;

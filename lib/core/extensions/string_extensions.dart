@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter_core/domain/extensions/datetime_extensions.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
@@ -74,23 +73,6 @@ extension StringToDateFormatting on String {
     } on Exception {
       return null;
     }
-  }
-
-  String? convertDateFormat(String newFormat) {
-    DateTime? dateTime = DateTime.tryParse(this);
-    return dateTime?.dateString(newFormat);
-  }
-
-  String? convertISODateFormat(String newFormat, {int daysToBeAdded = 0}) {
-    DateTime? dateTime = tryParsingIsoDate;
-    if (daysToBeAdded != 0 && dateTime != null) {
-      dateTime = DateTime(
-        dateTime.year,
-        dateTime.month,
-        dateTime.day + daysToBeAdded,
-      );
-    }
-    return dateTime?.dateString(newFormat);
   }
 
   String numberFormat() {

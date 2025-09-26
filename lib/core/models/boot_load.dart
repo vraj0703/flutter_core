@@ -1,4 +1,4 @@
-import 'package:flutter_core/domain/models/user_info.dart';
+import 'package:flutter_core/core/models/user_info.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'boot_load.g.dart';

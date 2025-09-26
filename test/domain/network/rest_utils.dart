@@ -1,4 +1,4 @@
-import 'package:flutter_core/domain/network/rest_utils.dart';
+import 'package:flutter_core/core/network/rest_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

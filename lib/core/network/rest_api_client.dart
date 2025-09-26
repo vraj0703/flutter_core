@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter_core/domain/typedef/typedef.dart';
+import 'package:flutter_core/core/typedef/typedef.dart';
 import 'package:http/http.dart' as http;
 
 abstract class RestApiClient {

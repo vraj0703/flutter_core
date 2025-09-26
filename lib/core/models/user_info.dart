@@ -1,4 +1,4 @@
-import 'package:flutter_core/domain/enums/member_status.dart';
+import 'package:flutter_core/core/enums/member_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_info.g.dart';

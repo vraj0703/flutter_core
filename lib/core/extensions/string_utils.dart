@@ -9,7 +9,7 @@ class StringUtils {
 
   static bool isLink(String str) => str.contains(
     RegExp(
-      r'^(https?:\/\/)?([\w\d_-]+)\.([\w\d_\.-]+)\/?\??([^#\n\r]*)?#?([^\n\r]*)',
+      r'^(https?://)?([\w_-]+)\.([\w_.-]+)/?\??([^#\n\r]*)?#?([^\n\r]*)',
     ),
   );
 

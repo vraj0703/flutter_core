@@ -9,5 +9,5 @@ abstract class IFileStorage {
 
   FileStat? fileInfo(String filename);
 
-  removeFile(String filename);
+  void removeFile(String filename);
 }

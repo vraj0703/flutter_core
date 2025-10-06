@@ -2,17 +2,26 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dart_either/dart_either.dart';
+import 'package:flutter_core/core/files_storage/file_storage.dart';
+import 'package:flutter_core/core/logic/platform_info.dart';
 import 'package:flutter_core/core/network/gql_client.dart';
 import 'package:flutter_core/core/network/rest_api_client.dart';
 import 'package:flutter_core/core/typedef/typedef.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../cache/cache.dart';
 
 abstract class BaseRepository<R> {
   final RestApiClient _apiClient;
   final GQLClient _gqlClient;
   final Logger _logger;
+  final PlatformInfo _platformInfo;
+  final List<BaseCache> _caches;
+  final IFileStorage? _fileStorage;
+  final SharedPreferences? _preferences;
 
   Future<Either<Exception, T>> get<T>({
     required String endpoint,
@@ -240,8 +249,15 @@ abstract class BaseRepository<R> {
   BaseRepository({
     required RestApiClient apiClient,
     required GQLClient gqlClient,
+    List<BaseCache> caches = const [],
+    IFileStorage? fileStorage,
+    SharedPreferences? preferences,
   }) : _logger = Logger(),
+       _platformInfo = PlatformInfo(),
        _gqlClient = gqlClient,
        _apiClient = apiClient,
+       _caches = caches,
+       _fileStorage = fileStorage,
+       _preferences = preferences,
        super();
 }

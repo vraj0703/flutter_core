@@ -1,4 +1,3 @@
-import 'package:flutter_core/core/enums/member_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_info.g.dart';
@@ -32,8 +31,8 @@ class UserInfo {
   @JsonKey(defaultValue: '')
   final String gender;
 
-  @JsonKey(defaultValue: MemberStatus.unknown)
-  final MemberStatus? status;
+  @JsonKey()
+  final String? status;
 
   @JsonKey(defaultValue: null)
   final String? mobileNumber;

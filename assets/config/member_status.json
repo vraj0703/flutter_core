@@ -1,0 +1,13 @@
+{
+  "member_statuses": {
+    "prospect": "PROSPECT",
+    "registration": "REGISTRATION",
+    "pendingActive": "PENDING_ACTIVE",
+    "discharged": "DISCHARGED",
+    "active": "ACTIVE",
+    "onHold": "ON_HOLD",
+    "inActive": "INACTIVE",
+    "unknown": "unknown",
+    "archived": "ARCHIVED"
+  }
+}

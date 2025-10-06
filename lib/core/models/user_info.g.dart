@@ -20,9 +20,7 @@ UserInfo _$UserInfoFromJson(Map<String, dynamic> json) {
     timezone: json['timeZoneId'] as String,
     lastName: json['lastName'] as String? ?? '',
     gender: json['gender'] as String? ?? '',
-    status:
-        $enumDecodeNullable(_$MemberStatusEnumMap, json['status']) ??
-        MemberStatus.unknown,
+    status: json['status'] as String?,
     preferredName: json['preferredName'] as String?,
     mobileNumber: json['mobileNumber'] as String?,
     email: json['login'] as String?,
@@ -40,19 +38,8 @@ Map<String, dynamic> _$UserInfoToJson(UserInfo instance) => <String, dynamic>{
   'activationDate': instance.activationDate?.toIso8601String(),
   'timeZoneId': instance.timezone,
   'gender': instance.gender,
-  'status': _$MemberStatusEnumMap[instance.status],
+  'status': instance.status,
   'mobileNumber': instance.mobileNumber,
   'login': instance.email,
   'dateOfBirth': instance.dateOfBirth,
-};
-
-const _$MemberStatusEnumMap = {
-  MemberStatus.prospect: 'PROSPECT',
-  MemberStatus.registration: 'REGISTRATION',
-  MemberStatus.pendingActive: 'PENDING_ACTIVE',
-  MemberStatus.discharged: 'DISCHARGED',
-  MemberStatus.active: 'ACTIVE',
-  MemberStatus.onHold: 'ON_HOLD',
-  MemberStatus.inActive: 'INACTIVE',
-  MemberStatus.unknown: 'unknown',
 };

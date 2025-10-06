@@ -23,6 +23,7 @@ import '../enums/storage_directory_options.dart';
 ///    }
 ///  }
 /// }
+///
 
 class StorageArgs {
   final StorageDirectoryOptions dirLocation;

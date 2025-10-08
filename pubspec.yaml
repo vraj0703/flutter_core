@@ -25,7 +25,8 @@ dependencies:
   injectable: ^2.1.1
   timezone: ^0.10.1
   my_localizations:
-    path: ../my_localizations
+    git:
+      url: https://github.com/vraj0703/my_localizations
   path_provider: ^2.1.5
   collection: ^1.19.1
   http: ^1.2.1

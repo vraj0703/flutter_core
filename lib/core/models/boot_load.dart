@@ -21,9 +21,6 @@ class BootLoad {
   final Map<String, dynamic> featureFlags;
 
   @JsonKey(required: false)
-  final Map<String, dynamic>? config;
-
-  @JsonKey(required: false)
   final String? debugBasicAuth;
 
   @JsonKey(required: false)
@@ -38,7 +35,6 @@ class BootLoad {
   BootLoad({
     required this.userInfo,
     required this.featureFlags,
-    required this.config,
     this.debugBasicAuth,
     this.debugJwt,
     this.languageCode,

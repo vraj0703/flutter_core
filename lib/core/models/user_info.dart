@@ -73,4 +73,20 @@ class UserInfo {
         '\n lastName: $lastName,\n preferredName: $preferredName,'
         '\n timezone: $timezone,\n gender: $gender}';
   }
+
+  factory UserInfo.sample() => UserInfo(
+        id: 1,
+        platformUrl: 'https://example.com',
+        firstName: 'Vishal',
+        lastName: 'Raj',
+        preferredName: 'vishal',
+        enrollmentDate: DateTime(2023, 1, 15),
+        activationDate: DateTime(2023, 1, 16),
+        timezone: 'Kolkata/India',
+        gender: 'Male',
+        status: 'Active',
+        mobileNumber: '123-456-7890',
+        email: 'vishal.raj@example.com',
+        dateOfBirth: '1990-05-20',
+      );
 }

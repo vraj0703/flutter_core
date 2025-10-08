@@ -11,7 +11,6 @@ BootLoad _$BootLoadFromJson(Map<String, dynamic> json) {
   return BootLoad(
     userInfo: UserInfo.fromJson(json['userInfo'] as Map<String, dynamic>),
     featureFlags: json['featureFlags'] as Map<String, dynamic>,
-    config: json['config'] as Map<String, dynamic>?,
     debugBasicAuth: json['debugBasicAuth'] as String?,
     debugJwt: json['debugJwt'] as String?,
     languageCode: json['languageCode'] as String?,
@@ -22,7 +21,6 @@ BootLoad _$BootLoadFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$BootLoadToJson(BootLoad instance) => <String, dynamic>{
   'userInfo': instance.userInfo,
   'featureFlags': instance.featureFlags,
-  'config': instance.config,
   'debugBasicAuth': instance.debugBasicAuth,
   'debugJwt': instance.debugJwt,
   'languageCode': instance.languageCode,

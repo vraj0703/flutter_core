@@ -50,4 +50,16 @@ class BootLoad {
   @override
   String toString() =>
       "Boot load :: $userInfo,\n feature flag : $featureFlags,\n debugBasicAuth :$debugBasicAuth";
+
+  factory BootLoad.sample() {
+    return BootLoad(
+      userInfo: UserInfo.sample(),
+      featureFlags: {
+        "is_card_re_issuance_enabled": true,
+        "is_biometric_login_enabled": false,
+      },
+      debugBasicAuth: null,
+      debugJwt: null,
+    );
+  }
 }

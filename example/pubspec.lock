@@ -422,9 +422,11 @@ packages:
   my_localizations:
     dependency: transitive
     description:
-      path: "../../my_localizations"
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "63600b06e4287de4552ac3d73c0aa636b808b366"
+      url: "https://github.com/vraj0703/my_localizations.git"
+    source: git
     version: "0.0.1"
   nm:
     dependency: transitive

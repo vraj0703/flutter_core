@@ -26,7 +26,7 @@ dependencies:
   timezone: ^0.10.1
   my_localizations:
     git:
-      url: https://github.com/vraj0703/my_localizations
+      url: https://github.com/vraj0703/my_localizations.git
   path_provider: ^2.1.5
   collection: ^1.19.1
   http: ^1.2.1

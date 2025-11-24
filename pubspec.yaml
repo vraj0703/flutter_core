@@ -11,8 +11,13 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
+
+  my_localizations:
+    git:
+      url: https://github.com/vraj0703/my_localizations.git
+
   web: ^1.0.0
-  get_it: ^7.6.0
+  get_it: ^9.1.0
   plugin_platform_interface: ^2.0.2
   internet_connection_checker: ^3.0.1
   dart_either: ^2.0.0
@@ -24,9 +29,6 @@ dependencies:
   json_annotation: ^4.7.0
   injectable: ^2.1.1
   timezone: ^0.10.1
-  my_localizations:
-    git:
-      url: https://github.com/vraj0703/my_localizations.git
   path_provider: ^2.1.5
   collection: ^1.19.1
   http: ^1.2.1
@@ -35,7 +37,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  json_serializable: ^6.5.1
   flutter_lints: ^6.0.0
   injectable_generator: ^2.1.1
   freezed: ^3.2.3

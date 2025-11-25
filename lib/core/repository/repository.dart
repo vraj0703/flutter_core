@@ -2,22 +2,20 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dart_either/dart_either.dart';
+import 'package:flutter_core/core/cache/cache.dart';
 import 'package:flutter_core/core/files_storage/file_storage.dart';
 import 'package:flutter_core/core/logic/platform_info.dart';
 import 'package:flutter_core/core/network/gql_client.dart';
 import 'package:flutter_core/core/network/rest_api_client.dart';
 import 'package:flutter_core/core/typedef/typedef.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:logger/logger.dart';
+import 'package:my_logger_metrics/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../cache/cache.dart';
 
 abstract class BaseRepository<R> {
   final RestApiClient _apiClient;
   final GQLClient _gqlClient;
-  final Logger _logger;
   final PlatformInfo _platformInfo;
   final List<BaseCache> _caches;
   final IFileStorage? _fileStorage;
@@ -35,10 +33,10 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      _logger.e('error with GET request: $e \n endpoint: $endpoint');
+      logger.e('error with GET request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      _logger.e('error with GET request: $error \n endpoint: $endpoint');
+      logger.e('error with GET request: $error \n endpoint: $endpoint');
       return Left(Exception(error));
     }
   }
@@ -56,10 +54,10 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      _logger.e('error with POST request: $e \n endpoint: $endpoint');
+      logger.e('error with POST request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      _logger.e('error with POST request: $error \n endpoint: $endpoint');
+      logger.e('error with POST request: $error \n endpoint: $endpoint');
       return Left(Exception(error));
     }
   }
@@ -77,12 +75,10 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      _logger.e('error with POST Object request: $e \n endpoint: $endpoint');
+      logger.e('error with POST Object request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      _logger.e(
-        'error with POST Object request: $error \n endpoint: $endpoint',
-      );
+      logger.e('error with POST Object request: $error \n endpoint: $endpoint');
       return Left(Exception(error));
     }
   }
@@ -107,10 +103,10 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      _logger.e('error with PUT request: $e \n endpoint: $endpoint');
+      logger.e('error with PUT request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      _logger.e('error with PUT request: $error \n endpoint: $endpoint');
+      logger.e('error with PUT request: $error \n endpoint: $endpoint');
       return Left(Exception(error));
     }
   }
@@ -128,10 +124,10 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      _logger.e('error with PUT request: $e \n endpoint: $endpoint');
+      logger.e('error with PUT request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      _logger.e('error with PUT request: $error \n endpoint: $endpoint');
+      logger.e('error with PUT request: $error \n endpoint: $endpoint');
       return Left(Exception(error));
     }
   }
@@ -148,7 +144,7 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      _logger.e('error with GQL query: $e \n query: ${query.asRequest}');
+      logger.e('error with GQL query: $e \n query: ${query.asRequest}');
       return Left(e);
     }
   }
@@ -165,7 +161,7 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      _logger.e(
+      logger.e(
         'error with GQL mutation: $e \n mutation: ${mutation.asRequest}',
       );
       return Left(e);
@@ -194,7 +190,7 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      _logger.e('error with Multipart POST request: $e \n endpoint: $endpoint');
+      logger.e('error with Multipart POST request: $e \n endpoint: $endpoint');
       return Left(e);
     }
   }
@@ -211,10 +207,10 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      _logger.e('error with DELETE request: $e \n endpoint: $endpoint');
+      logger.e('error with DELETE request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      _logger.e('error with DELETE request: $error \n endpoint: $endpoint');
+      logger.e('error with DELETE request: $error \n endpoint: $endpoint');
       return Left(Exception(error));
     }
   }
@@ -231,12 +227,12 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      _logger.e(
+      logger.e(
         'error with GET File download request: $e \n endpoint: $endpoint',
       );
       return Left(e);
     } catch (error) {
-      _logger.e(
+      logger.e(
         'error with GET File download request: $error \n endpoint: $endpoint',
       );
       return Left(Exception(error));
@@ -252,8 +248,7 @@ abstract class BaseRepository<R> {
     List<BaseCache> caches = const [],
     IFileStorage? fileStorage,
     SharedPreferences? preferences,
-  }) : _logger = Logger(),
-       _platformInfo = PlatformInfo(),
+  }) : _platformInfo = PlatformInfo(),
        _gqlClient = gqlClient,
        _apiClient = apiClient,
        _caches = caches,

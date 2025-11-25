@@ -15,6 +15,9 @@ dependencies:
   my_localizations:
     git:
       url: https://github.com/vraj0703/my_localizations.git
+  my_logger_metrics:
+    git:
+      url: https://github.com/vraj0703/my_logger_metrics.git
 
   web: ^1.0.0
   get_it: ^9.1.0
@@ -23,7 +26,6 @@ dependencies:
   dart_either: ^2.0.0
   shared_preferences: ^2.5.3
   graphql_flutter: ^5.2.1
-  logger: ^2.6.1
   intl: ^0.20.2
   freezed_annotation: ^3.1.0
   json_annotation: ^4.7.0

@@ -7,17 +7,18 @@ class JsonPrefsFile {
 
   final String name;
 
+  static SharedPreferences? _sharedPrefs;
+
   Future<Map<String, dynamic>> load() async {
-    final p = (await SharedPreferences.getInstance()).getString(name);
+    _sharedPrefs ??= await SharedPreferences.getInstance();
+    final p = _sharedPrefs!.getString(name);
     //print('loaded: $p');
     return Map<String, dynamic>.from(jsonDecode(p ?? '{}'));
   }
 
   Future<void> save(Map<String, dynamic> data) async {
     //print('saving $data');
-    await (await SharedPreferences.getInstance()).setString(
-      name,
-      jsonEncode(data),
-    );
+    _sharedPrefs ??= await SharedPreferences.getInstance();
+    await _sharedPrefs!.setString(name, jsonEncode(data));
   }
 }

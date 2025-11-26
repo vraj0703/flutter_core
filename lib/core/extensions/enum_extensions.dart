@@ -13,32 +13,24 @@ T enumFromStringWithFallback<T>(
 }) {
   if (value == null) return fallback;
   return values.firstWhere(
-    (type) => type.toString().split(".").last == value,
+    (type) => _enumName(type) == value,
     orElse: () => fallback,
   );
 }
 
 T? enumFromStringNoFallback<T>(String? value, Iterable<T> values) {
   if (value == null) return null;
-  return values.firstWhereOrNull(
-    (type) => type.toString().split(".").last == value,
-  );
+  return values.firstWhereOrNull((type) => _enumName(type) == value);
 }
 
 // ex. Converts strings like 'off_track' or 'Off_Track' to <Enum>.offTrack
 // returns null if no match found
 T? enumFromSnakeCaseString<T>(String? value, Iterable<T> values) {
   if (value == null) return null;
-  try {
-    return values.firstWhere(
-      (type) =>
-          type.toString().split(".").last.toLowerCase() ==
-          value.replaceAll('_', '').toLowerCase(),
-    );
-  } catch (e) {
-    // logger.e('Invalid enum value $value for type $T');
-    return null;
-  }
+  final normalizedValue = value.replaceAll('_', '').toLowerCase();
+  return values.firstWhereOrNull(
+    (type) => _enumName(type).toLowerCase() == normalizedValue,
+  );
 }
 
 T? enumFromString<T extends Enum>(
@@ -48,4 +40,9 @@ T? enumFromString<T extends Enum>(
 }) {
   if (value == null) return fallback;
   return values.firstWhereOrNull((type) => type.name == value) ?? fallback;
+}
+
+String _enumName(dynamic enumValue) {
+  if (enumValue is Enum) return enumValue.name;
+  return enumValue.toString().split('.').last;
 }

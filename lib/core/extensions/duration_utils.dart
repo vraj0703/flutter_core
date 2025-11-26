@@ -3,7 +3,7 @@ extension DurationExtensions on int {
 
   Duration get animateMs => Duration(milliseconds: this);
 
-  DateTime get dateTime {
+  DateTime get toDateTimeFromSeconds {
     return DateTime.fromMillisecondsSinceEpoch(this * 1000);
   }
 }

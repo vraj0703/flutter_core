@@ -11,17 +11,33 @@ enum MethodType { get, post, put, patch, delete, head }
 
 typedef HttpRequest = Future<http.Response> Function();
 
-class HttpClient {
-  static Future<HttpResponse> get(
+abstract class IHttpClient {
+  Future<HttpResponse> get(String url, {Map<String, String>? headers});
+
+  Future<HttpResponse> send(
     String url, {
+    Map<String, dynamic>? urlParams,
+    MethodType method = MethodType.get,
     Map<String, String>? headers,
-  }) async {
+    dynamic body,
+    Encoding? encoding,
+  });
+}
+
+class HttpClient implements IHttpClient {
+  final http.Client _client;
+
+  HttpClient({http.Client? client}) : _client = client ?? http.Client();
+
+  @override
+  Future<HttpResponse> get(String url, {Map<String, String>? headers}) async {
     return await _request(() async {
-      return await http.get(Uri.parse(url), headers: headers);
+      return await _client.get(Uri.parse(url), headers: headers);
     });
   }
 
-  static Future<HttpResponse> send(
+  @override
+  Future<HttpResponse> send(
     String url, {
     Map<String, dynamic>? urlParams,
     MethodType method = MethodType.get,
@@ -32,19 +48,68 @@ class HttpClient {
     HttpResponse? response;
 
     if (urlParams != null) {
-      Map<String, String> urlParams = {};
+      Map<String, String> params = {};
       urlParams.forEach((key, value) {
-        urlParams[key] = value.toString();
+        params[key] = value.toString();
       });
 
-      url += RestUtils.encodeParams(urlParams);
+      url += RestUtils.encodeParams(params);
     }
 
-    response = await HttpClient.get(url, headers: headers);
+    switch (method) {
+      case MethodType.get:
+        response = await get(url, headers: headers);
+        break;
+      case MethodType.post:
+        response = await _request(
+          () => _client.post(
+            Uri.parse(url),
+            headers: headers,
+            body: body,
+            encoding: encoding,
+          ),
+        );
+        break;
+      case MethodType.put:
+        response = await _request(
+          () => _client.put(
+            Uri.parse(url),
+            headers: headers,
+            body: body,
+            encoding: encoding,
+          ),
+        );
+        break;
+      case MethodType.patch:
+        response = await _request(
+          () => _client.patch(
+            Uri.parse(url),
+            headers: headers,
+            body: body,
+            encoding: encoding,
+          ),
+        );
+        break;
+      case MethodType.delete:
+        response = await _request(
+          () => _client.delete(
+            Uri.parse(url),
+            headers: headers,
+            body: body,
+            encoding: encoding,
+          ),
+        );
+        break;
+      case MethodType.head:
+        response = await _request(
+          () => _client.head(Uri.parse(url), headers: headers),
+        );
+        break;
+    }
     return response;
   }
 
-  static Future<HttpResponse> _request(HttpRequest request) async {
+  Future<HttpResponse> _request(HttpRequest request) async {
     http.Response response;
     try {
       response = await request();

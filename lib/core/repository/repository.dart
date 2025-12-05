@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -33,10 +35,10 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      logger.e('error with GET request: $e \n endpoint: $endpoint');
+      $logger.e('error with GET request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      logger.e('error with GET request: $error \n endpoint: $endpoint');
+      $logger.e('error with GET request: $error \n endpoint: $endpoint');
       return Left(Exception(error));
     }
   }
@@ -54,10 +56,10 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      logger.e('error with POST request: $e \n endpoint: $endpoint');
+      $logger.e('error with POST request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      logger.e('error with POST request: $error \n endpoint: $endpoint');
+      $logger.e('error with POST request: $error \n endpoint: $endpoint');
       return Left(Exception(error));
     }
   }
@@ -75,10 +77,12 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      logger.e('error with POST Object request: $e \n endpoint: $endpoint');
+      $logger.e('error with POST Object request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      logger.e('error with POST Object request: $error \n endpoint: $endpoint');
+      $logger.e(
+        'error with POST Object request: $error \n endpoint: $endpoint',
+      );
       return Left(Exception(error));
     }
   }
@@ -103,10 +107,10 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      logger.e('error with PUT request: $e \n endpoint: $endpoint');
+      $logger.e('error with PUT request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      logger.e('error with PUT request: $error \n endpoint: $endpoint');
+      $logger.e('error with PUT request: $error \n endpoint: $endpoint');
       return Left(Exception(error));
     }
   }
@@ -124,10 +128,10 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      logger.e('error with PUT request: $e \n endpoint: $endpoint');
+      $logger.e('error with PUT request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      logger.e('error with PUT request: $error \n endpoint: $endpoint');
+      $logger.e('error with PUT request: $error \n endpoint: $endpoint');
       return Left(Exception(error));
     }
   }
@@ -144,7 +148,7 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      logger.e('error with GQL query: $e \n query: ${query.asRequest}');
+      $logger.e('error with GQL query: $e \n query: ${query.asRequest}');
       return Left(e);
     }
   }
@@ -161,7 +165,7 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      logger.e(
+      $logger.e(
         'error with GQL mutation: $e \n mutation: ${mutation.asRequest}',
       );
       return Left(e);
@@ -190,7 +194,7 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      logger.e('error with Multipart POST request: $e \n endpoint: $endpoint');
+      $logger.e('error with Multipart POST request: $e \n endpoint: $endpoint');
       return Left(e);
     }
   }
@@ -207,10 +211,10 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      logger.e('error with DELETE request: $e \n endpoint: $endpoint');
+      $logger.e('error with DELETE request: $e \n endpoint: $endpoint');
       return Left(e);
     } catch (error) {
-      logger.e('error with DELETE request: $error \n endpoint: $endpoint');
+      $logger.e('error with DELETE request: $error \n endpoint: $endpoint');
       return Left(Exception(error));
     }
   }
@@ -227,12 +231,12 @@ abstract class BaseRepository<R> {
       if (onError != null) {
         onError(e);
       }
-      logger.e(
+      $logger.e(
         'error with GET File download request: $e \n endpoint: $endpoint',
       );
       return Left(e);
     } catch (error) {
-      logger.e(
+      $logger.e(
         'error with GET File download request: $error \n endpoint: $endpoint',
       );
       return Left(Exception(error));

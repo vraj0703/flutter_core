@@ -45,86 +45,77 @@ class HttpClient implements IHttpClient {
     dynamic body,
     Encoding? encoding,
   }) async {
-    HttpResponse? response;
-
-    if (urlParams != null) {
-      Map<String, String> params = {};
-      urlParams.forEach((key, value) {
-        params[key] = value.toString();
-      });
-
+    // Process URL Params
+    if (urlParams != null && urlParams.isNotEmpty) {
+      final Map<String, String> params = urlParams.map(
+        (key, value) => MapEntry(key, value.toString()),
+      );
       url += RestUtils.encodeParams(params);
     }
 
+    final uri = Uri.parse(url);
+
+    // NOTE: Refactored switch to be more readable and direct
     switch (method) {
       case MethodType.get:
-        response = await get(url, headers: headers);
-        break;
+        return _request(() => _client.get(uri, headers: headers));
       case MethodType.post:
-        response = await _request(
+        return _request(
           () => _client.post(
-            Uri.parse(url),
+            uri,
             headers: headers,
             body: body,
             encoding: encoding,
           ),
         );
-        break;
       case MethodType.put:
-        response = await _request(
+        return _request(
           () => _client.put(
-            Uri.parse(url),
+            uri,
             headers: headers,
             body: body,
             encoding: encoding,
           ),
         );
-        break;
       case MethodType.patch:
-        response = await _request(
+        return _request(
           () => _client.patch(
-            Uri.parse(url),
+            uri,
             headers: headers,
             body: body,
             encoding: encoding,
           ),
         );
-        break;
       case MethodType.delete:
-        response = await _request(
+        return _request(
           () => _client.delete(
-            Uri.parse(url),
+            uri,
             headers: headers,
             body: body,
             encoding: encoding,
           ),
         );
-        break;
       case MethodType.head:
-        response = await _request(
-          () => _client.head(Uri.parse(url), headers: headers),
-        );
-        break;
+        return _request(() => _client.head(uri, headers: headers));
     }
-    return response;
   }
 
   Future<HttpResponse> _request(HttpRequest request) async {
-    http.Response response;
     try {
-      response = await request();
+      final response = await request();
+      return HttpResponse(response);
     } on Exception catch (e) {
       dev.log('Network call failed: ${e.toString()}');
-      response = http.Response('ERROR: Could not get a response', 404);
+      return HttpResponse(
+        null,
+      ); // Return empty response which triggers disconnected/error type
     }
-    return HttpResponse(response);
   }
 }
 
 class HttpResponse {
   final http.Response? raw;
-
-  NetErrorType? errorType;
+  late final NetErrorType errorType;
 
   bool get success => errorType == NetErrorType.none;
 
@@ -135,34 +126,44 @@ class HttpResponse {
   int get statusCode => raw?.statusCode ?? -1;
 
   HttpResponse(this.raw) {
-    //No response at all, there must have been a connection error
     if (raw == null) {
       errorType = NetErrorType.disconnected;
-    } else if (raw!.statusCode >= 200 && raw!.statusCode <= 299) {
-      errorType = NetErrorType.none;
-    } else if (raw!.statusCode >= 500 && raw!.statusCode < 600) {
-      errorType = NetErrorType.timedOut;
-    } else if (raw!.statusCode >= 400 && raw!.statusCode < 500) {
-      errorType = NetErrorType.denied;
+    } else {
+      final code = raw!.statusCode;
+      if (code >= 200 && code < 300) {
+        errorType = NetErrorType.none;
+      } else if (code >= 500) {
+        errorType = NetErrorType
+            .timedOut; // Server errors treated as timeout/unavailable
+      } else if (code >= 400) {
+        errorType = NetErrorType.denied; // Client errors
+      } else {
+        errorType = NetErrorType.denied; // Fallback for other codes
+      }
     }
   }
 }
 
 class ServiceResult<R> {
   final HttpResponse response;
-
   R? content;
 
   bool get parseError => content == null;
-
   bool get success => response.success && !parseError;
 
   ServiceResult(this.response, R Function(Map<String, dynamic>) parser) {
-    if (StringUtils.isNotEmpty(response.body) && response.success) {
+    if (response.success && StringUtils.isNotEmpty(response.body)) {
       try {
-        content = parser.call(jsonDecode(utf8.decode(response.raw!.bodyBytes)));
-      } on FormatException catch (e) {
-        dev.log('ParseError: ${e.message}');
+        final decoded = jsonDecode(utf8.decode(response.raw!.bodyBytes));
+        if (decoded is Map<String, dynamic>) {
+          content = parser(decoded);
+        } else {
+          dev.log(
+            'ParseError: Expected Map<String, dynamic> but got ${decoded.runtimeType}',
+          );
+        }
+      } on Exception catch (e) {
+        dev.log('ParseError: ${e.toString()}');
       }
     }
   }

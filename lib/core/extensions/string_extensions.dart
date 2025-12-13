@@ -5,49 +5,45 @@ import 'package:flutter/material.dart';
 
 extension CapitalizationFormatting on String? {
   String formatUppercaseLowercase() {
-    if (this == null || this!.isEmpty) {
-      return '';
-    }
-    if (this!.length == 1) {
-      return this!;
-    }
-    return (this!.substring(0, 1).toUpperCase() +
-        this!.substring(1, this!.length).toLowerCase());
+    if (this == null || this!.isEmpty) return '';
+    if (this!.length == 1) return this!.toUpperCase();
+    return this![0].toUpperCase() + this!.substring(1).toLowerCase();
   }
 
-  String toCapitalized() => this != null
-      ? this!.isNotEmpty
-            ? '${this![0].toUpperCase()}${this!.substring(1).toLowerCase()}'
-            : ''
-      : '';
+  String toCapitalized() {
+    if (this == null || this!.isEmpty) return '';
+    return '${this![0].toUpperCase()}${this!.substring(1).toLowerCase()}';
+  }
 
-  String toTitleCase() => this != null
-      ? this!
-            .replaceAll(RegExp(' +'), ' ')
-            .split(' ')
-            .map((str) => str.toCapitalized())
-            .join(' ')
-      : "";
+  String toTitleCase() {
+    if (this == null || this!.isEmpty) return '';
+    return this!
+        .replaceAll(RegExp(' +'), ' ')
+        .trim()
+        .split(' ')
+        .map((str) => str.toCapitalized())
+        .join(' ');
+  }
 
   String withDelimiter(String delimiter, bool enable) =>
       enable && this != null ? "${this!}$delimiter " : this ?? "";
 
   String masker(bool yes, {String mask = '*', List<String>? omit}) {
     if (this == null) return '';
-    if (!yes) return this ?? '';
-    if (omit == null || omit.isEmpty) return mask * this!.length;
+    if (!yes) return this!;
 
-    var copy = this ?? '';
-    var singleChar = '.';
-    var output = '';
+    // If no specific chars to omit, mask everything
+    if (omit == null || omit.isEmpty) {
+      return mask * this!.length;
+    }
 
-    for (var element in omit) {
-      copy = copy.replaceAll(element, singleChar * element.length);
+    // Mask specific characters
+    // Optimize: Single pass replacement
+    String result = this!;
+    for (var charToMask in omit) {
+      result = result.replaceAll(charToMask, mask * charToMask.length);
     }
-    for (int i = 0; i < copy.length; i++) {
-      output += copy[i] != singleChar ? mask : this![i];
-    }
-    return output;
+    return result;
   }
 
   String injectMap(Map<String, String> map) {
@@ -115,7 +111,7 @@ extension StringState on String? {
 String randomString(int len) {
   var r = Random();
   return String.fromCharCodes(
-    List.generate(len, (index) => r.nextInt(33) + 89),
+    List.generate(len, (index) => r.nextInt(26) + 65), // A-Z range optimization
   );
 }
 

@@ -6,6 +6,7 @@ extension DateFormatting on DateTime {
     return DateFormat('yyyy-MM-dd').format(this);
   }
 
+  // Optimized: returns a new DateTime with time stripped
   DateTime mdyFormat() {
     return DateTime(year, month, day);
   }
@@ -22,45 +23,40 @@ extension DateFormatting on DateTime {
 
   int daysBetween(DateTime to) {
     DateTime from = DateTime(year, month, day);
-    to = DateTime(to.year, to.month, to.day);
-    return (to.difference(from).inHours / 24).round();
+    DateTime target = DateTime(to.year, to.month, to.day);
+    return (target.difference(from).inHours / 24).round();
   }
 
   bool get isDateToday {
-    var date = DateTime.now();
-    return year == date.year && month == date.month && day == date.day;
+    final now = DateTime.now();
+    return year == now.year && month == now.month && day == now.day;
   }
 
   bool get isDateYesterday {
-    var date = DateTime.now().subtract(const Duration(days: 1));
-    return year == date.year && month == date.month && day == date.day;
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    return year == yesterday.year &&
+        month == yesterday.month &&
+        day == yesterday.day;
   }
 
-  bool get isDateTodayOrYesterday {
-    return isDateToday || isDateYesterday;
-  }
+  bool get isDateTodayOrYesterday => isDateToday || isDateYesterday;
 
-  DateTime get getYearBefore =>
-      subtract(const Duration(days: 365)); // 1 year before
-  DateTime get getYearAfter => add(const Duration(days: 365)); // 1 year after
+  DateTime get getYearBefore => subtract(const Duration(days: 365));
+  DateTime get getYearAfter => add(const Duration(days: 365));
 
   TZDateTime timeZoneTs(String timezone) {
     return TZDateTime.from(this, getLocation(timezone));
   }
 
-  //new instance of DateTime, does not hold timezone
-  DateTime graphDataFormat() {
-    return DateTime(year, month, day);
-  }
+  // Renamed/Aliased for clarity or specific usage contexts, keeping original logic
+  DateTime graphDataFormat() => mdyFormat();
 
   TZDateTime graphDataFormatTz(String timezone) {
     return TZDateTime(getLocation(timezone), year, month, day);
   }
 
-  //new instance of DateTime, as UTC date
-  DateTime graphFormattedUTC() {
-    return mdyUTCFormat();
-  }
+  // Alias for UTC format
+  DateTime graphFormattedUTC() => mdyUTCFormat();
 
   DateTime cgmGraphFormat() {
     return DateTime(year, month, day, hour, minute, second);
@@ -71,7 +67,7 @@ extension DateFormatting on DateTime {
   }
 
   String get dateWithTimeZone {
-    var formatted = DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(this);
+    final formatted = DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(this);
     return '$formatted${formattedTimeZoneOffset()}';
   }
 
@@ -81,41 +77,35 @@ extension DateFormatting on DateTime {
       return '0$n';
     }
 
-    final duration = toLocal().timeZoneOffset,
-        hours = duration.inHours,
-        minutes = duration.inMinutes.remainder(60).abs().toInt();
+    final duration = toLocal().timeZoneOffset;
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60).abs().toInt();
     return '${hours > 0 ? '+' : '-'}${twoDigits(hours.abs())}:${twoDigits(minutes)}';
   }
 
-  int get unixTimeStamp {
-    return millisecondsSinceEpoch ~/ 1000;
-  }
+  int get unixTimeStamp => millisecondsSinceEpoch ~/ 1000;
 
-  int get dailyActionDayIndex {
-    return -daysBetween(DateTime.now());
-  }
+  int get dailyActionDayIndex => -daysBetween(DateTime.now());
 
   bool get isThisWeekDate {
-    var date = DateTime.now();
-    date = DateTime(date.year, date.month, date.day);
-    var firstDay = date.subtract(Duration(days: date.weekday - 1));
-    var lastDay = date.add(
-      Duration(days: DateTime.daysPerWeek - date.weekday + 1),
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    // Week starts on Monday (1) or Sunday (7)? Logic implies standard ISO week
+    final firstDay = today.subtract(Duration(days: today.weekday - 1));
+    final lastDay = today.add(
+      Duration(days: DateTime.daysPerWeek - today.weekday + 1),
     );
     return isAfter(firstDay) && isBefore(lastDay);
   }
 
   bool get isInLast6Days {
-    var date = DateTime.now();
-    date = DateTime(date.year, date.month, date.day);
-    var sevenDaysAgo = date.subtract(const Duration(days: 6));
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final sevenDaysAgo = today.subtract(const Duration(days: 6));
     return isAfter(sevenDaysAgo);
   }
 
-  bool get isThisYearDate {
-    var date = DateTime.now();
-    return year == date.year;
-  }
+  bool get isThisYearDate => year == DateTime.now().year;
 
   String dateToStringConverter({required DateFormat formatter}) {
     return formatter.format(this);
@@ -126,13 +116,13 @@ extension DateFormatting on DateTime {
     required int endDateOffset,
   }) {
     List<DateTime> dateTimeList = [];
+    final now = DateTime.now();
     for (
       var dateOffset = startDateOffset;
       dateOffset >= endDateOffset;
       dateOffset--
     ) {
-      DateTime scoreDate = DateTime.now().subtract(Duration(days: dateOffset));
-      dateTimeList.add(scoreDate);
+      dateTimeList.add(now.subtract(Duration(days: dateOffset)));
     }
     return dateTimeList;
   }
@@ -146,9 +136,7 @@ extension DateFormatting on DateTime {
         (isAfter(startTime) && isBefore(endTime));
   }
 
-  bool isSameDate(DateTime other) {
-    return year == other.year && month == other.month && day == other.day;
-  }
+  bool isSameDate(DateTime other) => isSameMonthDayYear(other);
 
   static DateTime? hourMinuteSecondStringToDateTime(String timeString) {
     final List<String> timeComponents = timeString.split(':');
@@ -157,24 +145,14 @@ extension DateFormatting on DateTime {
       return null;
     }
 
-    final int hour = int.tryParse(timeComponents[0]) ?? 0;
-    final int minute = int.tryParse(timeComponents[1]) ?? 0;
-    final int second = int.tryParse(timeComponents[2]) ?? 0;
+    final int? hour = int.tryParse(timeComponents[0]);
+    final int? minute = int.tryParse(timeComponents[1]);
+    final int? second = int.tryParse(timeComponents[2]);
+
+    if (hour == null || minute == null || second == null) return null;
 
     final DateTime now = DateTime.now();
-
-    final int currentYear = now.year;
-    final int currentMonth = now.month;
-    final int currentDay = now.day;
-
-    return DateTime(
-      currentYear,
-      currentMonth,
-      currentDay,
-      hour,
-      minute,
-      second,
-    );
+    return DateTime(now.year, now.month, now.day, hour, minute, second);
   }
 
   String hourMinuteSecondDateTimeToHourMinuteString() {
@@ -182,17 +160,10 @@ extension DateFormatting on DateTime {
     return format.format(this);
   }
 
-  /// Returns the most recent date for a given [weekday].
-  /// The [weekday] is expected to be in the range 1 (Monday) to 7 (Sunday),
-  /// as defined in the DateTime class.
-  ///
-  /// Example: Calling `DateTime.now().mostRecentWeekday(1)` will return
-  /// the most recent Monday.
   DateTime mostRecentWeekday(int weekday) {
     return DateTime.utc(year, month, day - (this.weekday - weekday) % 7);
   }
 
-  /// Returns "01-23-24" format
   String mmddyyString() {
     return dateToStringConverter(formatter: DateFormat('MM-dd-yy'));
   }
